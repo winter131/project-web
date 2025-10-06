@@ -11,10 +11,29 @@ jobs:
       - name: 🎯 Checkout Code
         uses: actions/checkout@v3
 
-      - name: 🔐 Setup Kubeconfig
+      - name: 🔐 Setup Kubeconfig (Simple)
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          cat > ~/.kube/config << EOF
+          apiVersion: v1
+          kind: Config
+          clusters:
+          - name: "rancher-15-56"
+            cluster:
+              server: "https://rancher-15-56.its.ac.id/k8s/clusters/local"
+              insecure-skip-tls-verify: true
+          users:
+          - name: "rancher-15-56"
+            user:
+              token: "kubeconfig-u-mvmnvvn5k6:kqz5vqqdc79q7xpt8xmtlw7njvlz54hckvgwlrq6kbhxcrsn26df7h"
+          contexts:
+          - name: "rancher-15-56"
+            context:
+              user: "rancher-15-56"
+              cluster: "rancher-15-56"
+          current-context: "rancher-15-56"
+          EOF
+          
           kubectl cluster-info
 
       - name: 🚀 Deploy to RKE2
