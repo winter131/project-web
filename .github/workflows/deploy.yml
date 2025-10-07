@@ -1,8 +1,9 @@
-name: 🚀 Auto Deploy to RKE2
+name: 🚀 CI/CD Auto Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -11,7 +12,7 @@ jobs:
       - name: 🎯 Checkout Code
         uses: actions/checkout@v3
 
-      - name: 🔐 Setup kubeconfig
+      - name: 🔐 Test Rancher Connection Only
         run: |
           mkdir -p ~/.kube
           cat > ~/.kube/config <<EOF
@@ -33,11 +34,11 @@ jobs:
               user: "rancher-15-56"
           current-context: "rancher-15-56"
           EOF
-          kubectl cluster-info --insecure-skip-tls-verify
 
-      - name: 🚀 Deploy to RKE2
-        run: |
-          echo "🔄 Starting automated deployment..."
-          kubectl rollout restart deployment/projectweb --insecure-skip-tls-verify
-          kubectl rollout status deployment/projectweb --timeout=300s --insecure-skip-tls-verify
-          kubectl get pods -l app=projectweb --insecure-skip-tls-verify
+          echo "🔌 Testing Rancher connection..."
+          kubectl get nodes --insecure-skip-tls-verify
+          echo "✅ Connection successful!"
+
+          echo "📊 Checking projectweb deployment..."
+          kubectl get deployment projectweb -n default --insecure-skip-tls-verify
+          echo "🎉 Test completed successfully!"

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Config
+clusters:
+  - name: "rancher-15-56"
+    cluster:
+      server: "https://rancher-15-56.its.ac.id/k8s/clusters/local"
+      insecure-skip-tls-verify: true
+
+users:
+  - name: "rancher-15-56"
+    user:
+      token: "kubeconfig-u-mvmnvgpdh5:qvgfzngc55nlpgz566drvss8tztbcml7hrq8z66rs94d4h9d9x9qkd"
+
+contexts:
+  - name: "rancher-15-56"
+    context:
+      user: "rancher-15-56"
+      cluster: "rancher-15-56"
+
+current-context: "rancher-15-56"
